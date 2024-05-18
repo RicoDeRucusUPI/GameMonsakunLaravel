@@ -1,0 +1,260 @@
+body {
+    background-color: #F9A603;
+}
+.form-grup {
+    border: solid 4px white;
+    border-radius: 3px;
+}
+.form-input,
+.form-input:hover,
+.form-input:active,
+.form-input:focus{
+    background-color: rgba(0, 0, 0, 0);
+    border: 0px;
+    color: rgb(0, 0, 0);
+    font-style: bold;
+}
+.form-input:active{
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(0, 0, 0);
+}
+.form-input:focus{
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(0, 0, 0);
+}
+.form-input:focus-visible{
+    background-color: rgba(0, 0, 0, 0);
+}
+hr {
+    margin-top: 0px;
+    border: solid 3px white;
+}
+.icon {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: 0px;
+}
+.icon-form {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0px;
+}
+.submit{
+    background-color: #F25C00;
+    color: white;
+    border: 0px;
+}
+.submit:hover{
+    background-color: #f87321;
+    color: rgb(0, 0, 0);
+    border: 0px;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+  }
+.form-login {
+    width: 70%;
+    margin: auto;
+    margin-top:25%;
+    margin-bottom: 25%;
+}
+button {
+    border: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+}
+.user-card {
+    width: 100px;
+    height: 150px;
+    color: green;
+}
+
+.card-profil {
+    padding: 20px;
+    margin: 10px;
+    border: 2px solid black;
+}
+.main-menu {
+    background-color: #F70025;
+    color: white;
+}
+.content{
+    margin-top: 50px;
+}
+.btn-main {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 20px;
+    color: #F70025;
+    margin-top: 10px;
+}
+.btn-main:hover {
+    text-decoration: none;
+    background-color: #F70025;
+    color: white;
+}
+figcaption {
+    text-align: center;
+}
+.daftar-gambar {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-around;
+    align-content: end;
+}
+.daftar-gambar > div {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-around;
+    align-content: end;
+}
+.gambar1-daftar{
+    max-width: 184px;
+}
+.gambar2-daftar{
+    max-width: 64px;
+}
+.gambar3-daftar{
+    max-width: 32px;
+}
+.modal {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.modal-content{
+ background-color: #F25C00;
+ color: white;
+ border: solid 5px white;
+}
+.bdr-s-2 {
+    border: solid 2px white;
+}
+.bdr-s-4 {
+    border: solid 4px white;
+}
+.back {
+    position: absolute;
+    padding: 10px;
+    top: 90%;
+    left: 5%;
+    bottom: 0px;
+    z-index: 2;
+}
+.btn-back{
+    background-color: #F25C00;
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+.btn-back:hover{
+    background-color: #F70025;
+}
+.btn-back > span {
+    color: rgba(0, 0, 0, 1);
+    border: solid 5px white;
+}
+.img-prof{
+    width: 25%;
+}
+.text-white{
+    color: white;
+}
+.kembali{
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+}
+.pd-2{
+    padding: 20px;
+}
+.kelas{
+    color: white;
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+    background-color: #F70025;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.soal{
+    color: white;
+    text-align: center;
+    font-size: 150px;
+    font-weight: bold;
+    background-color: #F70025;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+a:hover{
+    text-decoration: none;  
+}
+.text-white{
+    font-size: 28px;
+    color: white;
+}
+.scorboard{
+    margin-top: 50px;
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 300px;
+    max-height: 80%;
+    width: 100%;
+    color: white;
+    align-content: center;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+.register {
+    color: #F70025;
+}
+@media only screen and (max-width: 932px) {
+    h1{
+        font-size: 32px;
+    }
+    h2{
+        font-size: 26px;
+    }
+    .text-white{
+        font-size: 24px;
+    }
+    .scorboard{
+        margin-top: 10px;
+        height: 200px;
+        margin-bottom: 20px;
+    }
+    .form-login {
+        width: 70%;
+        margin: auto;
+        margin-top:30px;
+        margin-bottom: 0px;
+    }
+    .kembali{
+        margin-top: 50px;
+        position: relative;
+        padding-bottom: 20px;
+        padding-left: 20px;
+    }
+    .kelas{
+        font-size: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .back {
+        padding: 5px;
+        top: 85%;
+        left: 20px;
+        bottom: 5px;
+        z-index: 2;
+    }
+    .soal{
+        font-size: 20px;
+        font-weight: bold;
+        padding-top: 25px;
+        padding-bottom: 15px;
+    }
+  }

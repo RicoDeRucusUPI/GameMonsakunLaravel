@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
  
 class QuestionModel extends Model
 {
-    protected $table = 'soal';
-    protected $primaryKey = 'id_soal';
+    protected $table = 'question';
+    protected $primaryKey = 'id_question';
 
 
 }

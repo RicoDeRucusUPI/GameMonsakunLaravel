@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ClassModel;
 use App\Models\QuestionModel;
 use App\Models\QuestionAnswerStudentModel;
+use App\Models\StudentModel;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\View\View;
@@ -16,112 +18,132 @@ class ClassController extends Controller
         $this->classModel = new ClassModel;
         $this->questionModel = new QuestionModel;
         $this->questionAnswerStudentModel = new QuestionAnswerStudentModel;
+        $this->studentModel = new StudentModel;
     }
 
     public function index() : View {
+        if(session()->exists('id_student') == 1){
+            session()->forget('id_student');
+        }
+
+        echo(session('id_student'));
+        
         $data = [
-            'kelas' => $this->classModel->all()->toArray()
+            'class' => $this->classModel->all()->toArray()
         ];
+
         return view('class.index', $data);
     }
 
-    public function questions($id_kelas) : View {
-        $soal = $this->questionModel->where('id_kelas', $id_kelas)->get()->toArray();
+    public function questions($id_class){
+        if(session()->exists('id_student') != 1){
+            return redirect()->to(url('/class'));
+        }
+
+        $question = $this->questionModel->where('id_class', $id_class)->get()->toArray();
         $answerStudent = $this->questionAnswerStudentModel->where([
-            'id_pelajar' => 1
+            'id_student' => session('id_student')
         ])->get()->toArray();
-        $soalWithAnswers = [];
+        $questionWithAnswers = [];
         $totalPoint = 0;
-        foreach ($soal as $key => $value) {
+        foreach ($question as $key => $value) {
             $found_check = 0;
             foreach($answerStudent  as $key2 => $valueAnswer){
-                if($value['id_soal']  ==  $valueAnswer['id_soal']){
-                    if($valueAnswer['status_jawaban'] == "Answer Correct"){
+                if($value['id_question']  ==  $valueAnswer['id_question']){
+                    if($valueAnswer['status_answer'] == "Answer Correct"){
                         $totalPoint += $valueAnswer['point'];
                     }
-                    array_push($soalWithAnswers, [...$value, ...$valueAnswer]);
+                    array_push($questionWithAnswers, [...$value, ...$valueAnswer]);
                     $found_check = 1;
                 }
             }
             if($found_check == 0){
-                array_push($soalWithAnswers, [...$value,
-                "status_jawaban" => "Answer Incorrect"]);
+                array_push($questionWithAnswers, [...$value,
+                "status_answer" => "Answer Incorrect"]);
             }
             $found_check = 0;
         }
 
-        $pointTops = $this->questionAnswerStudentModel->select('pelajar.id_pelajar','pelajar.nama_pelajar', DB::raw('SUM(point) AS total_point'))
-            ->join('pelajar', 'soal_jawaban_pelajar.id_pelajar', '=', 'pelajar.id_pelajar')
-            ->where('status_jawaban', 'Answer Correct')
-            ->where('id_kelas', $id_kelas)
-            ->groupBy('id_pelajar', "nama_pelajar")
+        $pointTops = $this->questionAnswerStudentModel->select('student.id_student','student.name_student', DB::raw('SUM(point) AS total_point'))
+            ->join('student', 'question_answers_student.id_student', '=', 'student.id_student')
+            ->where('status_answer', 'Answer Correct')
+            ->where('question_answers_student.id_class', $id_class)
+            ->groupBy('id_student', "name_student")
             ->orderBy('total_point', "DESC")
             ->get();
         $data = [
-            "soal" => $soalWithAnswers,
+            "question" => $questionWithAnswers,
             'total_point' => $totalPoint,
-            'point_tops' => $pointTops
+            'point_tops' => $pointTops,
+            'id_class' => $id_class
         ];
 
         return view('question.index', $data);
     }
 
-    public function questionsSelected($id_kelas, $id_soal, $no_question) : View {
-        $soal = $this->questionModel
-        ->where('id_kelas', $id_kelas)
-        ->where('id_soal', $id_soal)
+    public function questionsSelected($id_class, $id_question, $no_question){
+        if(session()->exists('id_student') != 1){
+            return redirect()->to(url('/class'));
+        }
+
+        $question = $this->questionModel
+        ->where('id_class', $id_class)
+        ->where('id_question', $id_question)
         ->first()->toArray();
 
         $answerStudent = $this->questionAnswerStudentModel->where([
-            'id_pelajar' => 1,
-            'id_soal'  => $id_soal
+            'id_student' => session('id_student'),
+            'id_question'  => $id_question
         ])->first();
 
-        $jawaban_acak = Arr::shuffle(explode(';', $soal['jawaban_acak_soal']));
+        $answers_random = Arr::shuffle(explode(';', $question['answers_random_question']));
+        $answers_correct = explode(';', $question['answers_correct_question']);
         $data = [
             'no_question' =>  $no_question,
-            'soal' => [
-                'id_soal' => $soal['id_soal'],
-                'id_kelas' => $id_kelas,
-                'pertanyaan' => $soal['pertanyaan_soal'],
-                'jawaban_acak' => $jawaban_acak
+            'id_student' => session('id_student'),
+            'question' => [
+                'id_question' => $question['id_question'],
+                'id_class' => $id_class,
+                'question' => $question['question'],
+                'answers_random' => $answers_random,
+                'answers_correct' => $answers_correct
             ],
             'answer_student' => [
-                'status_jawaban' => $answerStudent->status_jawaban ?? null,
-                'jawaban_pelajar' => explode(';', $answerStudent->jawaban_pelajar ?? "") ?? null,
+                'status_answer' => $answerStudent->status_answer ?? null,
+                'answer_student' => explode(';', $answerStudent->answer_student ?? "") ?? null,
                 'point' => $answerStudent->point ?? null
             ]
         ];
         return view('question.selected', $data);
     }
 
-    public function questionsSelectedCheckAnswers($id_kelas, $id_soal, Request $request){
+    public function questionsSelectedCheckAnswers($id_class, $id_question, Request $request){
         try {
             $hasil = [];
-            $soal = $this->questionModel
-            ->where('id_kelas', $id_kelas)
-            ->where('id_soal', $id_soal)
+            $question = $this->questionModel
+            ->where('id_class', $id_class)
+            ->where('id_question', $id_question)
             ->first()->toArray();
 
-            $kelas = $this->classModel->where('id_kelas', $id_kelas)->first();
+            $kelas = $this->classModel->where('id_class', $id_class)->first();
             
-            if($soal['jawaban_benar_soal'] == $request->jawaban_pelajar){
+            if($question['answers_correct_question'] == $request->answer_student){
                 $hasil = [
-                    'status_jawaban' => true,
+                    'status_answer' => true,
                     'message' => "Answer Correct",
                     'point' => 0
                 ];
             }else{
                 $hasil = [
-                    'status_jawaban' => false,
+                    'status_answer' => false,
                     'message' => "Answer Incorrect",
                     'point' => $kelas['remove_point']
                 ];
             }
     
             $data = $this->questionAnswerStudentModel->where([
-                'id_pelajar' => $request->id_pelajar,
-                'id_soal'  => $request->id_soal
+                'id_student' => $request->id_student,
+                'id_question'  => $request->id_question
             ]);
             $point_tamp = 0;
             if($data->first() != null){
@@ -130,18 +152,18 @@ class ClassController extends Controller
                     $point_tamp = 0;
                 }
                 $data->update([
-                    'jawaban_pelajar' => $request->jawaban_pelajar,
-                    'status_jawaban' => $hasil['message'],
+                    'answer_student' => $request->answer_student,
+                    'status_answer' => $hasil['message'],
                     'point' => $point_tamp
                 ]);
             }else{
                 $point_tamp = 100 - $hasil['point'];
                 $this->questionAnswerStudentModel->insert([
-                    'id_pelajar' => $request->id_pelajar,
-                    'id_kelas' => $id_kelas,
-                    'id_soal'  => $request->id_soal,
-                    'jawaban_pelajar' => $request->jawaban_pelajar,
-                    'status_jawaban' => $hasil['message'],
+                    'id_student' => $request->id_student,
+                    'id_class' => $id_class,
+                    'id_question'  => $request->id_question,
+                    'answer_student' => $request->answer_student,
+                    'status_answer' => $hasil['message'],
                     'point' => $point_tamp
                 ]);
             }
@@ -149,8 +171,8 @@ class ClassController extends Controller
             return response()->json([
                 'data'    => [...$hasil, 'point_now' =>  $point_tamp],
                 'perbandingan' => [
-                    'benar' => $soal['jawaban_benar_soal'],
-                    'pelajar' => $request->jawaban_pelajar,
+                    'benar' => $question['answers_correct_question'],
+                    'student' => $request->answer_student,
                 ],
                 'status' => 200
             ]);
@@ -161,9 +183,38 @@ class ClassController extends Controller
                 'status' => 505
             ]);
         }
+    }
 
 
+    public function getStudentWithCode($code_student,$id_class){
+        try {
+            $student = $this->studentModel
+            ->where('code_student', $code_student)
+            ->where('id_class', $id_class)
+            ->first();
 
+            if(is_null($student)){
+                return response()->json([
+                    'message' => "Student Not Found",
+                    'data'    => null,
+                    'code' => 505
+                ]);
+            }
+
+            session(['id_student' => $student->id_student]);
+
+            return response()->json([
+                'message' => "success",
+                'data' => $student,
+                'code' => 200,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th,
+                'data'    => null,
+                'code' => 505
+            ]);
+        }
     }
 
 }

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
  
 class ClassModel extends Model
 {
-    protected $table = 'kelas';
-    protected $primaryKey = 'id_kelas';
+    protected $table = 'class';
+    protected $primaryKey = 'id_class';
 
 
 }

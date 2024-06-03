@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kelas', function (Blueprint $table) {
-            $table->id('id_kelas');
-            $table->string('no_kelas');
-            $table->string('warna_kelas');
+        Schema::create('class', function (Blueprint $table) {
+            $table->id('id_class');
+            $table->string('no_class');
+            $table->string('color_class');
             $table->integer('remove_point');
             $table->timestamps();
+            
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kelas');
+        Schema::dropIfExists('class');
     }
 };

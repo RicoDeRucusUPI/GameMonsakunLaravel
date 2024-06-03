@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionAnswerStudentModel extends Model
 {
-    protected $table = 'soal_jawaban_pelajar';
+    protected $table = 'question_answers_student';
     protected $primaryKey = 'id';
 
 }

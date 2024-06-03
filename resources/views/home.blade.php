@@ -3,69 +3,54 @@
 @section('title', "Home")
 
 @section('content')
-    <section class="bg-white w-full h-full flex">
-        <div class="w-full relative">
-            <div class="absolute w-full h-full bg-black opacity-[60%]"></div>
-            <img src="{{asset('assets/cover-home.avif')}}" alt="" class="w-full h-full object-cover">
+    <section class="bg-white w-full min-h-screen flex flex-col">
+        <div class="w-full h-screen relative start-game-button min-h-screen">
+            <div class="absolute w-full h-full bg-black opacity-[80%]"></div>
+            <img 
+                src="https://i.pinimg.com/originals/2a/58/5b/2a585b732647a27c598d10bb44f4267e.png"
+                class="w-full h-full object-cover"
+            >
             <div class="w-full h-full absolute top-0 flex flex-col">
-                <div class="border-2 border-blue-400 hover:bg-blue-400 w-[fit-content] p-8 m-auto rounded-xl text-blue-400 hover:text-white animate-bounce">
-                    <a href="{{url("/class")}}"  class="">
-                        <i class="fa-solid fa-play text-[120px]"></i>
-                    </a>
-                </div>
+                <button id="fullscreenBtn" class="flex flex-col border-2 border-blue-400 hover:bg-blue-400 p-8 m-auto rounded-xl text-blue-400 hover:text-white animate-bounce">
+                    <i class="fa-solid fa-play text-[30px] mx-auto my-4"></i>
+                    <span>Mulai Bermain</span>
+                </button>
             </div>    
         </div>
-
-
+        <div id="fullscreen" class="bg-white hidden h-screen">
+            <iframe id="myIframe" src="{{url('/class')}}">Your browser isn't compatible</iframe>
+        </div>   
     </section>
 
+    <style>
+        #fullscreen {
+        position: relative;
+        }
 
-      {{-- <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+        #myIframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        }
 
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-sm main-menu">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <h1><b>M A I N &nbsp;&nbsp;M E N U</b></h1>
-                    <!-- <a class="nav-link" href="#">Active</a> -->
-                </li>
-        </nav>
-        <hr>
-        <!-- End Navbar -->
-        <!-- CONTEN -->
-        <div class="container-fluid content row">
-            <div class="col-sm-6">
-                <div class="btn-group-vertical col-sm-8">
-                    <a href="pilih_kelas.php" class="col-sm-12 btn-main"><h2><b>BERMAIN</b></h2></a>
-                    <a href="akun.php" class="col-sm-12 btn-main"><h2><b>AKUN</b></h2></a>
-                    <a href="tentang.php" class="col-sm-12 btn-main"><h2><b>TENTANG</b></h2></a>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="container">
-                    <div>
-                        <div class="row">
-                            <div class="col-sm-8 bdr-s-2"><img src="{{asset("assets/user.png")}}" class="profil_home" alt="" height="100%"><b class="text-white">  Username</b></div>
-                            <div class="col-sm-4 bdr-s-2"><h2><b class="text-white">+30 <span class="fa fa-apple"></span></b></h2></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="row">
-                            <div class="scorboard">
-                                SCOREBOARD
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="back">
-            <a href="#">
-                <button type="button" class="btn-back"><span class="fa fa-arrow-left"></span> KEMBALI</button>
-            </a>
-        </div> -->
-        <script src="" async defer></script> --}}
+s    </style>
+    <script>
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const iframe = document.getElementById('myIframe');
 
-        @endsection
+        fullscreenBtn.addEventListener('click', () => {
+            $('#fullscreen').show()
+            $('.start-game-button').hide()
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.mozRequestFullScreen) { /* Firefox */
+            iframe.mozRequestFullScreen();
+        } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+            iframe.msRequestFullscreen();
+        }
+        });
+
+    </script>
+@endsection

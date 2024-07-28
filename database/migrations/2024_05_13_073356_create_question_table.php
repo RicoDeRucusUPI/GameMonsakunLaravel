@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('question', function (Blueprint $table) {
             $table->id('id_question');
             $table->text('question');
-            $table->text('answers_random_question');
-            $table->text('answers_correct_question');
+            $table->text('json_answers');
             $table->foreignId('id_class')->unsigned();
             $table->timestamps();
         });

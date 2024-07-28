@@ -11,6 +11,8 @@
                 class="w-full h-full object-cover"
             >
             <div class="w-full h-full absolute top-0 flex flex-col">
+                <a href="{{url('/class')}}">Demo</a>
+
                 <button id="fullscreenBtn" class="flex flex-col border-2 border-blue-400 hover:bg-blue-400 p-8 m-auto rounded-xl text-blue-400 hover:text-white animate-bounce">
                     <i class="fa-solid fa-play text-[30px] mx-auto my-4"></i>
                     <span>Mulai Bermain</span>

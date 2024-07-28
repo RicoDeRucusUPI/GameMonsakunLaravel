@@ -30,9 +30,8 @@ class QuestionController extends Controller
     public function question_add_process(Request $request){
         try {
             $this->questionModel->insert([
-                "question" => $request->data['valueQuestion'],
-                "answers_random_question" => $request->data['allValueAnswers'],
-                "answers_correct_question" => $request->data['valueAnswersCorrect'],
+                "question" => $request->data['question'],
+                "json_answers" => $request->data['json_answers'],
                 "id_class" => $request->id_class
             ]);
     
@@ -52,31 +51,28 @@ class QuestionController extends Controller
     public function question_update($id_class, $id_question){
         $class = $this->classModel->where('id_class', $id_class)->first();
         $question = $this->questionModel->where('id_question', $id_question)->first();
-        $answers_random = explode(';', $question['answers_random_question']);
-        $answers_correct = explode(';', $question['answers_correct_question']);
-        
         $data = [
             'class' => $class,
             'question' => [
                 "id_question" => $question->id_question,
                 "question" => $question->question,
-                "answers_correct_question" => $answers_correct,
-                "answers_random_question" =>  array_splice($answers_random,count($answers_correct), count($answers_random)),
+                "json_answers" => $question->json_answers
             ]
-        ];
+        ];        
         return view('teacher/class/update', $data);
     }
  
     public function question_update_process(Request $request){
         try {
+
             $this->questionModel->where("id_question", $request->id_question)->update([
-                "question" => $request->data['valueQuestion'],
-                "answers_random_question" => $request->data['allValueAnswers'],
-                "answers_correct_question" => $request->data['valueAnswersCorrect'],
+                "question" => $request->data['question'],
+                "json_answers" => $request->data['json_answers']
             ]);
     
             return response()->json([
                 'status' => 200,
+                'data' => $request->data['json_answers'],
                 "message" => "Success"
             ]);
         } catch (\Throwable $th) {

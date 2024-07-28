@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('id_question')->unsigned()->index()->nullable();
             $table->foreignId('id_student')->unsigned()->index()->nullable();
             $table->foreignId('id_class')->unsigned()->index()->nullable();
-            $table->text('answer_student')->nullable();
+            $table->text('json_answers')->nullable();
             $table->string('status_answer')->nullable();
             $table->integer('point');
             $table->timestamps();

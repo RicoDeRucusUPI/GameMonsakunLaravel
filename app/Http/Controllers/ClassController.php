@@ -26,7 +26,7 @@ class ClassController extends Controller
             session()->forget('id_student');
         }
 
-        echo(session('id_student'));
+        // echo(session('id_student'));
         
         $data = [
             'class' => $this->classModel->all()->toArray()
@@ -95,9 +95,9 @@ class ClassController extends Controller
             'id_student' => session('id_student'),
             'id_question'  => $id_question
         ])->first();
-
-        $answers_random = Arr::shuffle(explode(';', $question['answers_random_question']));
-        $answers_correct = explode(';', $question['answers_correct_question']);
+        
+        $decodeJsonAnswers = json_decode($question['json_answers']);
+        $decodeJsonAnswersStudent = json_decode($answerStudent->json_answers ?? null);
         $data = [
             'no_question' =>  $no_question,
             'id_student' => session('id_student'),
@@ -105,12 +105,11 @@ class ClassController extends Controller
                 'id_question' => $question['id_question'],
                 'id_class' => $id_class,
                 'question' => $question['question'],
-                'answers_random' => $answers_random,
-                'answers_correct' => $answers_correct
+                'json_answers' => $decodeJsonAnswers->answers_random
             ],
             'answer_student' => [
                 'status_answer' => $answerStudent->status_answer ?? null,
-                'answer_student' => explode(';', $answerStudent->answer_student ?? "") ?? null,
+                'json_answers' => $decodeJsonAnswersStudent,
                 'point' => $answerStudent->point ?? null
             ]
         ];
@@ -126,8 +125,19 @@ class ClassController extends Controller
             ->first()->toArray();
 
             $kelas = $this->classModel->where('id_class', $id_class)->first();
+            $question_json_answer = json_decode($question['json_answers']);
             
-            if($question['answers_correct_question'] == $request->answer_student){
+            $answer_student = [];
+            foreach ($request->answer_student as $key => $value) {
+                array_push($answer_student, $value['value']);
+            }
+
+            $check_answer = false;
+
+            if(implode(",",$answer_student) == implode(",",$question_json_answer->answers_correct)){
+                $check_answer = true;
+            }
+            if($check_answer){
                 $hasil = [
                     'status_answer' => true,
                     'message' => "Answer Correct",
@@ -152,7 +162,7 @@ class ClassController extends Controller
                     $point_tamp = 0;
                 }
                 $data->update([
-                    'answer_student' => $request->answer_student,
+                    'json_answers' => json_encode($request->answer_student),
                     'status_answer' => $hasil['message'],
                     'point' => $point_tamp
                 ]);
@@ -162,17 +172,16 @@ class ClassController extends Controller
                     'id_student' => $request->id_student,
                     'id_class' => $id_class,
                     'id_question'  => $request->id_question,
-                    'answer_student' => $request->answer_student,
+                    'json_answers' => json_encode($request->answer_student),
                     'status_answer' => $hasil['message'],
                     'point' => $point_tamp
                 ]);
             }
 
             return response()->json([
-                'data'    => [...$hasil, 'point_now' =>  $point_tamp],
-                'perbandingan' => [
-                    'benar' => $question['answers_correct_question'],
-                    'student' => $request->answer_student,
+                'data'    => [
+                    "status_answer" => $check_answer ,
+                    "point_now" => $point_tamp
                 ],
                 'status' => 200
             ]);

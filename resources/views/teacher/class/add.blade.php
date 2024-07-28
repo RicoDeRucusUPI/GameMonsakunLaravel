@@ -49,7 +49,8 @@
                                 <ul id="box-answers-correct" class="h-auto w-full grid grid-cols-1 ">
                                 </ul>
                                 <div class="flex">
-                                    <input id="input-add-answers-correct" class="w-[80%] p-2 text-sm bg-transparent" type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-correct" class="w-[60%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-value-correct" class="w-[20%] p-2 text-sm bg-transparent border" type="number" placeholder="Masukan Nilai">
                                     <button id="btn-add-answers-correct" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                                 </div>
                             </div>
@@ -60,7 +61,7 @@
                                 <ul id="box-answers-incorrect" class="h-auto w-full grid grid-cols-1 ">
                                 </ul>
                                 <div class="flex">
-                                    <input id="input-add-answers-incorrect" class="w-[80%] p-2 text-sm bg-transparent" type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-incorrect" class="w-[60%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
                                     <button id="btn-add-answers-incorrect" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                                 </div>
                             </div>
@@ -77,26 +78,35 @@
 
     <script type="module">
         import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/+esm'
+        let lengthAnswersCorrect = 0;
 
         function processInputAnswers(){
             $('#btn-add-answers-correct').on('click',()=>{
                 const valueAnswer = $('#input-add-answers-correct');
-                if(valueAnswer.val() != ""){
-                    let lengthAnswers = $('#box-answers-correct li').length;
+                const valueNilaiAnswer = $('#input-add-answers-value-correct');
+                if(valueAnswer.val() != "" && valueNilaiAnswer.val() != ""){
+                    let lengthAnswers = $('#box-answers-correct li').length + lengthAnswersCorrect;
                     $('#box-answers-correct').append(`
                     <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                        <span class="w-[80%] my-auto px-2">${valueAnswer.val()}</span>
+                        <span class="answer w-[70%] my-auto px-2">${valueAnswer.val()}</span>
+                        <span class="value w-[10%] my-auto px-2">${valueNilaiAnswer.val()}</span>
                         <div class="w-[20%] flex">
                             <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-up-answer-${lengthAnswers}"><i class="fa-solid fa-arrow-up text-lg"></i></button>
                             <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-down-answer-${lengthAnswers}"><i class="fa-solid fa-arrow-down text-lg"></i></button>
                             <button class="w-2/6 bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
                         </div>
                     </li>`)
-                    valueAnswer.val(""); 
+                    //  HTML Ini harus sama dengan fungsi startToInputValue
+                    valueAnswer.val("");
+                    valueNilaiAnswer.val(""); 
                     processRemoveAnswer();
                     processMoveAnswer(lengthAnswers);
                 }else{
-                    alert('Jawaban Tidak Boleh Kosong')
+                    Swal.fire({
+                        title: "Peringatan",
+                        text: "Jawaban tidak boleh kosong",
+                        icon: "warning"
+                    });
                 }
             })
 
@@ -105,14 +115,20 @@
                 if(valueAnswer.val() != ""){
                     $('#box-answers-incorrect').append(`
                     <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                        <span class="w-[80%] my-auto px-2">${valueAnswer.val()}</span>
-                        <button class="w-[20%] bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
+                        <span class="answer w-[80%] my-auto px-2">${valueAnswer.val()}</span>
+                        <div class="w-[20%] flex">
+                            <button class="w-full bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
+                        </div>
                     </li>
                     `)
                     valueAnswer.val(""); 
                     processRemoveAnswer();
                 }else{
-                    alert('Jawaban Tidak Boleh Kosong')
+                    Swal.fire({
+                        title: "Peringatan",
+                        text: "Jawaban tidak boleh kosong",
+                        icon: "warning"
+                    });
                 }
             })            
         }
@@ -142,27 +158,34 @@
 
         function getData(){
             const valueQuestion = $('#question').val();
-            let valueAnswersCorrect = [];
+            let answer_random = [];
+            let answer_correct = [];
             $('#box-answers-correct li').each((i, elm)=>{
-                let value = $(elm).find('span').text();
-                valueAnswersCorrect.push(value);
+                let valueAnswer = $(elm).find('span.answer').text();
+                let valueNilai = $(elm).find('span.value').text();
+                answer_random.push({
+                    "answer" : valueAnswer,
+                    "value" : valueNilai,
+                    "correct_answer" : true
+                })
+                answer_correct.push(valueNilai)
             });
-            
-            valueAnswersCorrect = valueAnswersCorrect.join(';');
 
-            let valueAnswersIncorrect = [];
             $('#box-answers-incorrect li').each((i, elm)=>{
-                let value = $(elm).find('span').text();
-                valueAnswersIncorrect.push(value);
+                let valueAnswer = $(elm).find('span.answer').text();
+                answer_random.push({
+                    "answer" : valueAnswer,
+                    "value" : -100000,
+                    "correct_answer" : false
+                })
             });
-
-            valueAnswersIncorrect  = valueAnswersIncorrect.join(';');
 
             return {
-                "valueQuestion" : valueQuestion,
-                "valueAnswersCorrect" : valueAnswersCorrect,
-                "valueAnswersIncorrect" : valueAnswersIncorrect,
-                "allValueAnswers" : valueAnswersIncorrect != "" ? valueAnswersCorrect + ';' + valueAnswersIncorrect : valueAnswersCorrect
+                "question" : valueQuestion,
+                "json_answers" : JSON.stringify({
+                    "answers_random" : answer_random,
+                    "answers_correct" : answer_correct
+                })
             }
         }
 
@@ -173,7 +196,7 @@
                 _token: $('meta[name="csrf-token"]').attr('content') 
             }
             
-            if(body.data['valueQuestion'] != "" && body.data['valueAnswersCorrect'] != ""){
+            if(body.data['question'] != "" && body.data['answers_correct'] != ""){
                 let routePost = '{{route('questionAddProcess', [$class->id_class])}}'
                 $.post(routePost, body, function (data, status){
                     if(data.status == 200){

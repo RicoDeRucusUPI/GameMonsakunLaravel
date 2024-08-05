@@ -123,19 +123,25 @@ class ClassController extends Controller
             ->where('id_class', $id_class)
             ->where('id_question', $id_question)
             ->first()->toArray();
-
+            $question_answer = json_decode($question['json_answers']);
             $kelas = $this->classModel->where('id_class', $id_class)->first();
-            $question_json_answer = json_decode($question['json_answers']);
-            
-            $answer_student = [];
-            foreach ($request->answer_student as $key => $value) {
-                array_push($answer_student, $value['value']);
-            }
-
             $check_answer = false;
-
-            if(implode(",",$answer_student) == implode(",",$question_json_answer->answers_correct)){
-                $check_answer = true;
+            $sum_answer = 0;
+            $last_answer_student = null;
+            $answer_student = $request->answer_student;
+            if($answer_student != null){
+                $last_answer_student =  array_pop($answer_student);
+                $last_answer_student = $last_answer_student['value'];
+                $question_answer_result = $question_answer->answers_result;
+                if($question_answer_result == $last_answer_student){
+                    foreach ($answer_student as $key => $answer) {
+                        $sum_answer += $answer['value'];
+                    }
+    
+                    if($sum_answer == $question_answer_result){
+                        $check_answer = true;
+                    }
+                }    
             }
             if($check_answer){
                 $hasil = [
@@ -150,6 +156,8 @@ class ClassController extends Controller
                     'point' => $kelas['remove_point']
                 ];
             }
+
+            
     
             $data = $this->questionAnswerStudentModel->where([
                 'id_student' => $request->id_student,
@@ -177,10 +185,12 @@ class ClassController extends Controller
                     'point' => $point_tamp
                 ]);
             }
+            
 
+            
             return response()->json([
                 'data'    => [
-                    "status_answer" => $check_answer ,
+                    "status_answer" => $check_answer,
                     "point_now" => $point_tamp
                 ],
                 'status' => 200

@@ -37,7 +37,7 @@ class QuestionSeeder extends Seeder
                     "value" : -100000,
                     "correct_answer" : false
                 }],
-                "answers_correct" : [8,2,10]
+                "answers_result" : 10
                 }',
             "id_class" => 1
         ]);

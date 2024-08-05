@@ -61,7 +61,7 @@
                                 <ul id="box-answers-incorrect" class="h-auto w-full grid grid-cols-1 ">
                                 </ul>
                                 <div class="flex">
-                                    <input id="input-add-answers-incorrect" class="w-[60%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-incorrect" class="w-[80%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
                                     <button id="btn-add-answers-incorrect" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                                 </div>
                             </div>
@@ -159,7 +159,8 @@
         function getData(){
             const valueQuestion = $('#question').val();
             let answer_random = [];
-            let answer_correct = [];
+            let answers_result;
+            let sum_answers = 0;
             $('#box-answers-correct li').each((i, elm)=>{
                 let valueAnswer = $(elm).find('span.answer').text();
                 let valueNilai = $(elm).find('span.value').text();
@@ -168,8 +169,10 @@
                     "value" : valueNilai,
                     "correct_answer" : true
                 })
-                answer_correct.push(valueNilai)
+                sum_answers++;
             });
+
+            answers_result = $('#box-answers-correct li').last().find('span.value').text();
 
             $('#box-answers-incorrect li').each((i, elm)=>{
                 let valueAnswer = $(elm).find('span.answer').text();
@@ -184,8 +187,9 @@
                 "question" : valueQuestion,
                 "json_answers" : JSON.stringify({
                     "answers_random" : answer_random,
-                    "answers_correct" : answer_correct
-                })
+                    "answers_result" : answers_result
+                }),
+                "sum_answers" : sum_answers
             }
         }
 
@@ -196,7 +200,7 @@
                 _token: $('meta[name="csrf-token"]').attr('content') 
             }
             
-            if(body.data['question'] != "" && body.data['answers_correct'] != ""){
+            if(body.data['question'] != "" && body.data['answers_correct'] != "" && body.data['sum_answers'] >= 3){
                 let routePost = '{{route('questionAddProcess', [$class->id_class])}}'
                 $.post(routePost, body, function (data, status){
                     if(data.status == 200){
@@ -211,11 +215,10 @@
             }else{
                 Swal.fire({
                     title: "Peringatan",
-                    text: "Pertanyaan atau Jawaban tidak boleh kosong",
+                    text: "Pertanyaan atau Jawaban minimal 3",
                     icon: "warning"
                 });
             }
-
         }
 
         processInputAnswers();

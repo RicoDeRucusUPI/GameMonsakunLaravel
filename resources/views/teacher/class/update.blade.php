@@ -88,7 +88,6 @@
             let question = @json($question);
             let answers = JSON.parse(question['json_answers']);            
             $('#question').val(question['question'])
-            console.log(answers)
             answers['answers_random'].forEach(value => {
                 if(value.correct_answer){
                     $('#box-answers-correct').append(`
@@ -203,7 +202,8 @@
         function getData(){
             const valueQuestion = $('#question').val();
             let answer_random = [];
-            let answer_correct = [];
+            let answers_result;
+            let sum_answers = 0;
             $('#box-answers-correct li').each((i, elm)=>{
                 let valueAnswer = $(elm).find('span.answer').text();
                 let valueNilai = $(elm).find('span.value').text();
@@ -212,8 +212,9 @@
                     "value" : valueNilai,
                     "correct_answer" : true
                 })
-                answer_correct.push(valueNilai)
+                sum_answers++;
             });
+            answers_result = $('#box-answers-correct li').last().find('span.value').text();
 
             $('#box-answers-incorrect li').each((i, elm)=>{
                 let valueAnswer = $(elm).find('span.answer').text();
@@ -228,8 +229,9 @@
                 "question" : valueQuestion,
                 "json_answers" : JSON.stringify({
                     "answers_random" : answer_random,
-                    "answers_correct" : answer_correct
-                })
+                    "answers_result" : answers_result
+                }),
+                "sum_answers" : sum_answers
             }
         }
 
@@ -241,7 +243,7 @@
                 _token: $('meta[name="csrf-token"]').attr('content') 
             }
             
-            if(body.data['question'] != "" && body.data['answers_correct'] != ""){
+            if(body.data['question'] != "" && body.data['answers_correct'] != "" && body.data['sum_answers'] >= 3){
                 let routePost = '{{route('questionUpdateProcess', [$class->id_class, $question["id_question"]])}}';
                 $.post(routePost, body, function (data, status){
                     console.log(data);
@@ -256,7 +258,7 @@
             }else{
                 Swal.fire({
                     title: "Peringatan",
-                    text: "Pertanyaan atau Jawaban tidak boleh kosong",
+                    text: "Pertanyaan atau Jawaban minimal 3",
                     icon: "warning"
                 });
             }

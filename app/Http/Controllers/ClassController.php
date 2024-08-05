@@ -133,15 +133,17 @@ class ClassController extends Controller
             $answer_student = $request->answer_student;
             if($answer_student != null){
                 $last_answer_student =  array_pop($answer_student);
-                $last_answer_student = $last_answer_student['value'];
-                $question_answer_result = (int) $question_answer->answer_result->value;
-                if($question_answer_result == $last_answer_student){
-                    foreach ($answer_student as $key => $answer) {
-                        $sum_answer += $answer['value'];
-                    }
-    
-                    if($sum_answer == $question_answer_result){
-                        $check_answer = true;
+                if($last_answer_student['result']){
+                    $last_answer_student = $last_answer_student['value'];
+                    $question_answer_result = (int) $question_answer->answer_result->value;
+                    if($question_answer_result == $last_answer_student){
+                        foreach ($answer_student as $key => $answer) {
+                            $sum_answer += $answer['value'];
+                        }
+        
+                        if($sum_answer == $question_answer_result){
+                            $check_answer = true;
+                        }
                     }
                 }    
             }
@@ -192,7 +194,7 @@ class ClassController extends Controller
             
             return response()->json([
                 'data'    => [
-                    "test" => $sum_answer,
+                    "test" => $answer_student,
                     "value" =>  $question_answer->answer_result->value,
                     "status_answer" => $check_answer,
                     "point_now" => $point_tamp

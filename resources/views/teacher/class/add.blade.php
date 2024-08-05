@@ -169,6 +169,7 @@
                 answer_options.push({
                     "answer" : valueAnswer,
                     "value" : valueNilai,
+                    "result" : false
                 })
             });
 
@@ -178,7 +179,8 @@
                     "answer_options" : answer_options,
                     "answer_result" : {
                         "answer" : valueAnswerResult,
-                        "value" : valueNilaiAnswerResult
+                        "value" : valueNilaiAnswerResult,
+                        "result" : true
                     }
                 }),
             }

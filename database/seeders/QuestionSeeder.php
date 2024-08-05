@@ -18,20 +18,25 @@ class QuestionSeeder extends Seeder
             "json_answers" => '{
                 "answer_options" : [{
                     "answer" : "Rico Membeli 8 Buah Apel",
-                    "value" : 8
+                    "value" : 8,
+                    "result" : false
                 },{
                     "answer" : "Rizky Membeli 2 Buah Apel",
-                    "value" : 2
+                    "value" : 2,
+                    "result" : false
                 },{
                     "answer" : "Rico Membeli 10 Buah Apel",
-                    "value" : 10
+                    "value" : 10,
+                    "result" : false
                 },{
                     "answer" : "Rizky Membuang 2 Buah Apel",
-                    "value" : -2
+                    "value" : -2,
+                    "result" : false
                 }],
                 "answer_result" : {
                     "answer" : "Terdapat 10 Buah Apel yang dimiliki mereka berdua",
-                    "value" : 10
+                    "value" : 10,
+                    "result" : true
                 }
                 }',
             "id_class" => 1
@@ -42,23 +47,29 @@ class QuestionSeeder extends Seeder
             "json_answers" => '{
                 "answer_options" : [{
                     "answer" : "Buang 2 buah mangga",
-                    "value" : -2
+                    "value" : -2,
+                    "result" : false
                 },{
                     "answer" : "Beli 5 buah mangga",
-                    "value" : 5
+                    "value" : 5,
+                    "result" : false
                 },{
                     "answer" : "Beli 7 buah mangga",
-                    "value" : 7
+                    "value" : 7,
+                    "result" : false
                 },{
                     "answer" : "Beli 3 buah mangga",
-                    "value" : 3
+                    "value" : 3,
+                    "result" : false
                 },{
                     "answer" : "Buang 4 buah mangga",
-                    "value" : -4
+                    "value" : -4,
+                    "result" : false
                 }],
                 "answer_result" : {
                     "answer" : "Mempunyai 3 buah mangga",
-                    "value" : 3
+                    "value" : 3,
+                    "result" : true
                 }
                 }',
             "id_class" => 1

@@ -48,7 +48,7 @@
             <span class="text-[20px] text-center font-bold text-blue-400 mx-auto">Jawaban Acak</span>
             <ul class="flex flex-col gap-4 py-6  mb-auto relative border border-2 h-full p-4" id="sortable-answers-random">
                 @foreach ($question['json_answers'] as $item)
-                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}">{{$item->answer}}</li>
+                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}" data-result="{{$item->result}}">{{$item->answer}}</li>
                 @endforeach
             </ul>
             <div class="text-sm lg:text-base bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" id="alert-wrong-answer" role="alert">
@@ -102,7 +102,8 @@
             $('#drop-answers li').each((i, e)=>{
                 rels.push({
                     "answer" : $(e).text(),
-                    "value" : $(e).attr('rel')
+                    "value" : $(e).attr('rel'),
+                    "result" : $(e).data('result')
                 });
             });
             return rels;

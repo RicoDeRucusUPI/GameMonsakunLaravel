@@ -45,26 +45,43 @@
                     </div>
                     <div class="h-[100%] flex gap-2">
                         <div class="w-2/4 flex flex-col gap-2">
-                            <label for="">Jawaban Benar <span class="text-xs text-red-600">*Urutkan dengan benar</span></label>
+                            <label for="">Jawaban Pilihan <span class="text-xs text-red-600"></span></label>
                             <div class=" border border-gray-400 rounded-md">
-                                <ul id="box-answers-correct" class="h-auto w-full grid grid-cols-1 ">
+                                <div class="flex bg-gray-100 border text-center">
+                                    <div class="w-[60%] flex text-sm bg-transparent border h-[50px] "> 
+                                        <span class="m-auto">Keterangan </span>
+                                    </div>
+                                    <div class="w-[20%] flex text-sm bg-transparent border h-[50px] ">
+                                        <span class="m-auto">Nilai</span>
+                                    </div>
+                                    <div class="w-[20%] flex text-sm bg-transparent border h-[50px] ">
+                                        <span class="m-auto">Aksi</span>
+                                    </div>
+                                </div>
+                                <ul id="box-answers-options" class="h-auto w-full grid grid-cols-1 border ">
                                     
                                 </ul>
                                 <div class="flex">
-                                    <input id="input-add-answers-correct" class="w-[60%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
-                                    <input id="input-add-answers-value-correct" class="w-[20%] p-2 text-sm bg-transparent border" type="number" placeholder="Masukan Nilai">
-                                    <button id="btn-add-answers-correct" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                    <input id="input-add-answers-options" class="w-[60%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-value-options" class="w-[20%] p-2 text-sm bg-transparent border" type="number" placeholder="Masukan Nilai">
+                                    <button id="btn-add-answers-options" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         </div>
                         <div class="w-2/4 flex flex-col gap-2">
-                            <label for="">Jawaban Salah <span class="text-xs text-red-600"></span></label>
+                            <label for="">Hasil Jawaban <span class="text-xs text-red-600"></span></label>
                             <div class=" border border-gray-400 rounded-md">
-                                <ul id="box-answers-incorrect" class="h-auto w-full grid grid-cols-1 ">
-                                </ul>
+                                <div class="flex bg-gray-100 border text-center">
+                                    <div class="w-[80%] flex text-sm bg-transparent border h-[50px] "> 
+                                        <span class="m-auto">Keterangan </span>
+                                    </div>
+                                    <div class="w-[20%] flex text-sm bg-transparent border h-[50px] ">
+                                        <span class="m-auto">Nilai</span>
+                                    </div>
+                                </div>
                                 <div class="flex">
-                                    <input id="input-add-answers-incorrect" class="w-[80%] p-2 text-sm bg-transparent border" type="text" placeholder="Masukan Jawaban">
-                                    <button id="btn-add-answers-incorrect" class="bg-gray-500 hover:bg-gray-600 w-[20%] h-[50px] text-white text-lg"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                    <input id="input-add-answers-result" class="w-[80%] p-2 text-sm bg-transparent border h-[50px] " type="text" placeholder="Masukan Jawaban">
+                                    <input id="input-add-answers-value-result" class="w-[20%] p-2 text-sm bg-transparent border h-[50px] " type="number" placeholder="Masukan Nilai">
                                 </div>
                             </div>
                         </div>
@@ -88,51 +105,46 @@
             let question = @json($question);
             let answers = JSON.parse(question['json_answers']);            
             $('#question').val(question['question'])
-            answers['answers_random'].forEach(value => {
-                if(value.correct_answer){
-                    $('#box-answers-correct').append(`
-                    <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                        <span class="answer w-[70%] my-auto px-2">${value.answer}</span>
-                        <span class="value w-[10%] my-auto px-2">${value.value}</span>
-                        <div class="w-[20%] flex">
-                            <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-up-answer-${lengthAnswersCorrect}"><i class="fa-solid fa-arrow-up text-lg"></i></button>
-                            <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-down-answer-${lengthAnswersCorrect}"><i class="fa-solid fa-arrow-down text-lg"></i></button>
-                            <button class="w-2/6 bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
-                        </div>
-                    </li>`)
-                    //  HTML Ini harus sama dengan fungsi processInputAnswers
-                    processMoveAnswer(lengthAnswersCorrect);
-                    lengthAnswersCorrect++;
-                }
+            answers['answer_options'].forEach(value => {
+                $('#box-answers-options').append(`
+                <li class="w-full border h-[50px] flex flex-row bg-transparent text-sm">
+                    <div class=" w-[60%] border flex">
+                        <span class="my-auto ml-2 answer">${value.answer}</span>
+                    </div>
+                    <div class=" w-[20%] border flex">
+                        <span class="my-auto ml-2 value">${value.value}</span>
+                    </div>
+                    <div class="w-[20%] flex">
+                        <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-up-answer-${lengthAnswersCorrect}"><i class="fa-solid fa-arrow-up text-lg"></i></button>
+                        <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-down-answer-${lengthAnswersCorrect}"><i class="fa-solid fa-arrow-down text-lg"></i></button>
+                        <button class="w-2/6 bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
+                    </div>
+                </li>`)
+                //  HTML Ini harus sama dengan fungsi processInputAnswers
+                processMoveAnswer(lengthAnswersCorrect);
+                lengthAnswersCorrect++;
             });
 
-
-            answers['answers_random'].forEach(value => {
-                if(!value.correct_answer){
-                    $('#box-answers-incorrect').append(`
-                        <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                            <span class="answer w-[80%] my-auto px-2">${value.answer}</span>
-                            <div class="w-[20%] flex">
-                                <button class="w-full bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
-                            </div>
-                        </li>
-                    `)
-                }
-            });
+            $('#input-add-answers-result').val(answers['answer_result'].answer);
+            $('#input-add-answers-value-result').val(answers['answer_result'].value);
 
             processRemoveAnswer();
         }
 
         function processInputAnswers(){
-            $('#btn-add-answers-correct').on('click',()=>{
-                const valueAnswer = $('#input-add-answers-correct');
-                const valueNilaiAnswer = $('#input-add-answers-value-correct');
+            $('#btn-add-answers-options').on('click',()=>{
+                const valueAnswer = $('#input-add-answers-options');
+                const valueNilaiAnswer = $('#input-add-answers-value-options');
                 if(valueAnswer.val() != "" && valueNilaiAnswer.val() != ""){
-                    let lengthAnswers = $('#box-answers-correct li').length + lengthAnswersCorrect;
-                    $('#box-answers-correct').append(`
+                    let lengthAnswers = $('#box-answers-options li').length + lengthAnswersCorrect;
+                    $('#box-answers-options').append(`
                     <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                        <span class="answer w-[70%] my-auto px-2">${valueAnswer.val()}</span>
-                        <span class="value w-[10%] my-auto px-2">${valueNilaiAnswer.val()}</span>
+                        <div class=" w-[60%] border flex">
+                            <span class="my-auto ml-2 answer">${valueAnswer.val()}</span>
+                        </div>
+                        <div class="answer w-[20%] border flex">
+                            <span class="my-auto ml-2 value">${valueNilaiAnswer.val()}</span>
+                        </div>
                         <div class="w-[20%] flex">
                             <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-up-answer-${lengthAnswers}"><i class="fa-solid fa-arrow-up text-lg"></i></button>
                             <button class="w-2/6 bg-gray-200 m-auto h-full hover:bg-gray-300 btn-down-answer-${lengthAnswers}"><i class="fa-solid fa-arrow-down text-lg"></i></button>
@@ -152,28 +164,6 @@
                     });
                 }
             })
-
-            $('#btn-add-answers-incorrect').on('click',()=>{
-                const valueAnswer = $('#input-add-answers-incorrect');
-                if(valueAnswer.val() != ""){
-                    $('#box-answers-incorrect').append(`
-                    <li class="w-full border-b border-gray-200 h-[50px] flex flex-row bg-transparent text-sm ">
-                        <span class="answer w-[80%] my-auto px-2">${valueAnswer.val()}</span>
-                        <div class="w-[20%] flex">
-                            <button class="w-full bg-red-500 m-auto h-full hover:bg-red-600 btn-remove-answer"><i class="fa fa-minus-circle text-white text-lg" aria-hidden="true"></i></button>
-                        </div>
-                    </li>
-                    `)
-                    valueAnswer.val(""); 
-                    processRemoveAnswer();
-                }else{
-                    Swal.fire({
-                        title: "Peringatan",
-                        text: "Jawaban tidak boleh kosong",
-                        icon: "warning"
-                    });
-                }
-            })            
         }
 
 
@@ -201,37 +191,29 @@
 
         function getData(){
             const valueQuestion = $('#question').val();
-            let answer_random = [];
-            let answers_result;
-            let sum_answers = 0;
-            $('#box-answers-correct li').each((i, elm)=>{
-                let valueAnswer = $(elm).find('span.answer').text();
-                let valueNilai = $(elm).find('span.value').text();
-                answer_random.push({
+            const valueAnswerResult = $('#input-add-answers-result').val();
+            const valueNilaiAnswerResult = $('#input-add-answers-value-result').val();
+
+            let answer_options = [];
+            let answer_result;
+            $('#box-answers-options li').each((i, elm)=>{
+                let valueAnswer = $(elm).find('div span.answer').text();
+                let valueNilai = $(elm).find('div span.value').text();
+                answer_options.push({
                     "answer" : valueAnswer,
                     "value" : valueNilai,
-                    "correct_answer" : true
-                })
-                sum_answers++;
-            });
-            answers_result = $('#box-answers-correct li').last().find('span.value').text();
-
-            $('#box-answers-incorrect li').each((i, elm)=>{
-                let valueAnswer = $(elm).find('span.answer').text();
-                answer_random.push({
-                    "answer" : valueAnswer,
-                    "value" : -100000,
-                    "correct_answer" : false
                 })
             });
 
             return {
                 "question" : valueQuestion,
                 "json_answers" : JSON.stringify({
-                    "answers_random" : answer_random,
-                    "answers_result" : answers_result
+                    "answer_options" : answer_options,
+                    "answer_result" : {
+                        "answer" : valueAnswerResult,
+                        "value" : valueNilaiAnswerResult
+                    }
                 }),
-                "sum_answers" : sum_answers
             }
         }
 
@@ -242,11 +224,12 @@
                 data : getData(),
                 _token: $('meta[name="csrf-token"]').attr('content') 
             }
+
+            let json_answers = JSON.parse(body.data['json_answers']);
             
-            if(body.data['question'] != "" && body.data['answers_correct'] != "" && body.data['sum_answers'] >= 3){
+            if(body.data['question'] != "" && json_answers['answer_options'] != "" && json_answers['answer_result'].answer != "" && json_answers['answer_result'].value != ""){
                 let routePost = '{{route('questionUpdateProcess', [$class->id_class, $question["id_question"]])}}';
                 $.post(routePost, body, function (data, status){
-                    console.log(data);
                     if(data.status == 200){
                         Swal.fire({
                             title: "Informasi",
@@ -258,7 +241,7 @@
             }else{
                 Swal.fire({
                     title: "Peringatan",
-                    text: "Pertanyaan atau Jawaban minimal 3",
+                    text: "Pertanyaan atau Jawaban Tidak Boleh Kosong",
                     icon: "warning"
                 });
             }

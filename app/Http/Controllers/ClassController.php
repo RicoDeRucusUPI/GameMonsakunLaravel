@@ -98,6 +98,8 @@ class ClassController extends Controller
         
         $decodeJsonAnswers = json_decode($question['json_answers']);
         $decodeJsonAnswersStudent = json_decode($answerStudent->json_answers ?? null);
+        $decodeJsonAnswers->answer_options = [...$decodeJsonAnswers->answer_options, $decodeJsonAnswers->answer_result];
+        shuffle($decodeJsonAnswers->answer_options);
         $data = [
             'no_question' =>  $no_question,
             'id_student' => session('id_student'),
@@ -105,7 +107,7 @@ class ClassController extends Controller
                 'id_question' => $question['id_question'],
                 'id_class' => $id_class,
                 'question' => $question['question'],
-                'json_answers' => $decodeJsonAnswers->answers_random
+                'json_answers' => $decodeJsonAnswers->answer_options
             ],
             'answer_student' => [
                 'status_answer' => $answerStudent->status_answer ?? null,
@@ -132,7 +134,7 @@ class ClassController extends Controller
             if($answer_student != null){
                 $last_answer_student =  array_pop($answer_student);
                 $last_answer_student = $last_answer_student['value'];
-                $question_answer_result = $question_answer->answers_result;
+                $question_answer_result = (int) $question_answer->answer_result->value;
                 if($question_answer_result == $last_answer_student){
                     foreach ($answer_student as $key => $answer) {
                         $sum_answer += $answer['value'];
@@ -190,6 +192,8 @@ class ClassController extends Controller
             
             return response()->json([
                 'data'    => [
+                    "test" => $sum_answer,
+                    "value" =>  $question_answer->answer_result->value,
                     "status_answer" => $check_answer,
                     "point_now" => $point_tamp
                 ],

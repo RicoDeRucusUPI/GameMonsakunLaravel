@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('no_class');
             $table->string('color_class');
             $table->integer('remove_point');
+            $table->integer('slot_answer');
             $table->timestamps();
             
         });

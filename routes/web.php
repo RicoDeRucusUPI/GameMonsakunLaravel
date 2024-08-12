@@ -31,7 +31,7 @@ Route::group(['prefix' => 'teacher'], function () {
         Route::get('class/{id_class}/edit', [ClassControllerTeacher::class, 'editClass'])->name('editClass');
         Route::post('class/{id_class}/add_student', [ClassControllerTeacher::class, 'add_student_process'])->name('addStudentProcess');
         Route::get('class/{id_class}/delete_student/{id_student}', [ClassControllerTeacher::class, 'delete_student_process'])->name('deleteStudentProcess');
-        
+        Route::post('class/{id_class}/save_configuration_class', [ClassControllerTeacher::class, 'saveConfigurationClass'])->name('saveConfigurationClass');        
         
         Route::get('class/{id_class}/question/add', [QuestionControllerTeacher::class, 'question_add']);
         Route::post('class/{id_class}/question/add', [QuestionControllerTeacher::class, 'question_add_process'])->name('questionAddProcess');

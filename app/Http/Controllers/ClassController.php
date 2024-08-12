@@ -98,7 +98,7 @@ class ClassController extends Controller
         
         $decodeJsonAnswers = json_decode($question['json_answers']);
         $decodeJsonAnswersStudent = json_decode($answerStudent->json_answers ?? null);
-        $decodeJsonAnswers->answer_options = [...$decodeJsonAnswers->answer_options, $decodeJsonAnswers->answer_result];
+        $decodeJsonAnswers->answer_options = $decodeJsonAnswers->answer_options;
         shuffle($decodeJsonAnswers->answer_options);
         $data = [
             'no_question' =>  $no_question,
@@ -128,24 +128,14 @@ class ClassController extends Controller
             $question_answer = json_decode($question['json_answers']);
             $kelas = $this->classModel->where('id_class', $id_class)->first();
             $check_answer = false;
-            $sum_answer = 0;
-            $last_answer_student = null;
-            $answer_student = $request->answer_student;
-            if($answer_student != null){
-                $last_answer_student =  array_pop($answer_student);
-                if($last_answer_student['result']){
-                    $last_answer_student = $last_answer_student['value'];
-                    $question_answer_result = (int) $question_answer->answer_result->value;
-                    if($question_answer_result == $last_answer_student){
-                        foreach ($answer_student as $key => $answer) {
-                            $sum_answer += $answer['value'];
-                        }
-        
-                        if($sum_answer == $question_answer_result){
-                            $check_answer = true;
-                        }
+            $value_student = $request->value_student;
+            if($value_student != null){
+                $answer_keys = $question_answer->answer_keys;
+                foreach ($answer_keys as $key => $value) {
+                    if($value == $value_student){
+                        $check_answer = true;
                     }
-                }    
+                }
             }
             if($check_answer){
                 $hasil = [
@@ -159,9 +149,7 @@ class ClassController extends Controller
                     'message' => "Answer Incorrect",
                     'point' => $kelas['remove_point']
                 ];
-            }
-
-            
+            }            
     
             $data = $this->questionAnswerStudentModel->where([
                 'id_student' => $request->id_student,
@@ -190,12 +178,8 @@ class ClassController extends Controller
                 ]);
             }
             
-
-            
             return response()->json([
                 'data'    => [
-                    "test" => $answer_student,
-                    "value" =>  $question_answer->answer_result->value,
                     "status_answer" => $check_answer,
                     "point_now" => $point_tamp
                 ],
@@ -203,6 +187,7 @@ class ClassController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
+                'status_answer' => false,
                 'message' => $th,
                 'data'    => null,
                 'status' => 505

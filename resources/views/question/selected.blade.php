@@ -20,7 +20,7 @@
                 <ul class="flex flex-col gap-4 py-6 p-4 my-2"  id="sortable-answers">
                     @if($answer_student['status_answer'] ==  "Answer Correct")
                         @foreach ($answer_student['json_answers'] as $item)
-                        <li class="draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base" style="width:auto" rel="{{$item->value}}">{{$item->answer}}</li>
+                        <li class="draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base" style="width:auto" >{{$item}}</li>
                         @endforeach    
                     @else
                     <div class="min-h-[120px] lg:min-h-[130px] h-auto border relative gap-4 grid grid-cols-1">
@@ -48,7 +48,7 @@
             <span class="text-[20px] text-center font-bold text-blue-400 mx-auto">Jawaban Acak</span>
             <ul class="flex flex-col gap-4 py-6  mb-auto relative border border-2 h-full p-4" id="sortable-answers-random">
                 @foreach ($question['json_answers'] as $item)
-                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}" data-result="{{$item->result}}">{{$item->answer}}</li>
+                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}">{{$item->value}}. {{$item->answer}}</li>
                 @endforeach
             </ul>
             <div class="text-sm lg:text-base bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" id="alert-wrong-answer" role="alert">
@@ -79,7 +79,8 @@
             const body = {
                 id_question : {{$question['id_question']}},
                 id_student : {{$id_student}},
-                answer_student : getAnswers(),
+                answer_student : getAnswer(),
+                value_student : getValue(),
                 _token: $('meta[name="csrf-token"]').attr('content') 
             }
 
@@ -97,17 +98,22 @@
                 }
             })
         }
-        const getAnswers = ()=>{
+        const getValue = ()=>{
             var rels = [];
             $('#drop-answers li').each((i, e)=>{
-                rels.push({
-                    "answer" : $(e).text(),
-                    "value" : $(e).attr('rel'),
-                    "result" : $(e).data('result')
-                });
+                rels.push($(e).attr('rel'));
             });
             return rels;
         }
+
+        const getAnswer = ()=>{
+            var rels = [];
+            $('#drop-answers li').each((i, e)=>{
+                rels.push($(e).text());
+            });
+            return rels;
+        }
+
         
         $('#btn-send-answers').on('click',()=>{
             processPostAnswers()

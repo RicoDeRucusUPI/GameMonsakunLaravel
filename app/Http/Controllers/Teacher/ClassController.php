@@ -115,4 +115,25 @@ class ClassController extends Controller
             $this->studentModel->where('id_student', $id_student)->delete();   
             return redirect(route('editClass',$id_class));
     }
+
+    public function saveConfigurationClass(Request $request, $id_class){
+        try {
+            $class = $this->classModel->where('id_class', $id_class);
+            $class->update([
+                "remove_point" => $request->removePointConfig,
+                "slot_answer" => $request->slotAnswerConfig
+            ]);
+    
+            return response()->json([
+                'status' => 200,
+                "message" => "Success"
+            ]);            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th,
+                'data'    => null,
+                'status' => 505
+            ]);
+        }
+    }
 }

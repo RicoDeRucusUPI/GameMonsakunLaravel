@@ -51,32 +51,50 @@
                 </div>
                 <div class="w-2/6">
                     <div class="flex flex-col border-b border-gray-300 pb-2">
-                        <span class="text-lg text-gray-800 font-bold"><i class="fa-solid fa-users-between-lines"></i> Pelajar Kelas {{$class->no_class}}</span>
-                    </div>    
-                    <div class="grid grid-cols-1 gap-4 p-4">
-                        <div class="flex gap-4 text-sm">
-                            <span class="w-2/6 font-bold">NISN</span>
-                            <span class="w-2/6 font-bold">Nama</span>
-                            <span class="w-1/6 ml-auto font-bold text-red-600">Kode</span>
-                            <span class="w-1/6 text-center font-bold">Aksi</span>
-
-                        </div>
-                        @foreach($student as $item)
-                            <div class="flex gap-4 text-sm">
-                                <span class="w-2/6 truncate">{{$item->nisn_student}}</span>
-                                <span class="w-2/6 truncate">{{$item->name_student}}</span>
-                                <span class="w-1/6 ml-auto ">{{$item->code_student}}</span>
-                                <a href="{{route('deleteStudentProcess', [$class->id_class, $item->id_student])}}" class="w-1/6 ">
-                                    <span class="mx-auto m-auto  font-bold text-red-600 "><i class="fa fa-trash" aria-hidden="true"></i></span>
-                                </a>
+                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2"><i class="fa-solid fa-tools"></i> Konfigurasi Kelas {{$class->no_class}}</span>    
+                        <div class="grid grid-cols-1 gap-4 p-4">
+                            <div class="flex flex-col gap-2 text-sm">
+                                <span class="w-2/6 font-bold">Pengurangan Point</span>
+                                <input id="remove_point_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->remove_point}}">
                             </div>
-                        @endforeach
-                        <div class="flex gap-4">
-                            <input id="input-nisn-student" type="text" class="w-2/6 border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan NISN">
-                            <input id="input-name-student" class="w-2/6 border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Nama">
-                            <button id="btn-add-student" class="w-2/6 bg-green-600 rounded-md hover:bg-green-700">
-                                <span class="mx-auto m-auto text-[20px] font-bold text-white "><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
-                            </button>
+                            <div class="flex flex-col gap-2 text-sm">
+                                <span class="w-2/6 font-bold">Slot Jawaban Murid</span>
+                                <input id="slot_answer_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->slot_answer}}">
+                            </div>
+                            <div class="flex flex-col gap-2 text-sm">
+                                <button id="btn-save-config" class="w-full bg-green-600 rounded-md hover:bg-green-700 p-4">
+                                    <span class="mx-auto m-auto btn font-bold text-white "><i class="fa fa-save mr-2" aria-hidden="true"></i> Simpan Konfigurasi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col border-b border-gray-300 pb-2">
+                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2 pt-2"><i class="fa-solid fa-users-between-lines"></i> Pelajar Kelas {{$class->no_class}}</span>    
+                        <div class="grid grid-cols-1 gap-4 p-4">
+                            <div class="flex gap-4 text-sm">
+                                <span class="w-2/6 font-bold">NISN</span>
+                                <span class="w-2/6 font-bold">Nama</span>
+                                <span class="w-1/6 ml-auto font-bold text-red-600">Kode</span>
+                                <span class="w-1/6 text-center font-bold">Aksi</span>
+
+                            </div>
+                            @foreach($student as $item)
+                                <div class="flex gap-4 text-sm">
+                                    <span class="w-2/6 truncate">{{$item->nisn_student}}</span>
+                                    <span class="w-2/6 truncate">{{$item->name_student}}</span>
+                                    <span class="w-1/6 ml-auto ">{{$item->code_student}}</span>
+                                    <a href="{{route('deleteStudentProcess', [$class->id_class, $item->id_student])}}" class="w-1/6 ">
+                                        <span class="mx-auto m-auto  font-bold text-red-600 "><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                    </a>
+                                </div>
+                            @endforeach
+                            <div class="flex gap-4">
+                                <input id="input-nisn-student" type="text" class="w-2/6 border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan NISN">
+                                <input id="input-name-student" class="w-2/6 border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Nama">
+                                <button id="btn-add-student" class="w-2/6 bg-green-600 rounded-md hover:bg-green-700">
+                                    <span class="mx-auto m-auto text-[20px] font-bold text-white "><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,6 +104,43 @@
 
     <script type="module">
         import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/+esm'
+
+        function saveConfiguration(){
+            $('#btn-save-config').on('click',()=>{
+                let removePointConfig = $('#remove_point_config').val();
+                let slotAnswerConfig = $('#slot_answer_config').val();
+
+                if(removePointConfig != "" && slotAnswerConfig != ""){
+                    let body = {
+                        removePointConfig : removePointConfig,
+                        slotAnswerConfig : slotAnswerConfig,
+                        _token: $('meta[name="csrf-token"]').attr('content') 
+                    };
+                    let routePost = '{{route('saveConfigurationClass', [$class->id_class])}}'
+                    $.post(routePost, body, function (data, status){
+                        if(data.status == 200){
+                            Swal.fire({
+                                title: "Informasi",
+                                text: "Menyimpan Konfigurasi Berhasil",
+                                icon: "success"
+                            });
+                        }else{
+                            Swal.fire({
+                                title: "Informasi",
+                                text: "Menyimpan Konfigurasi Gagal",
+                                icon: "warning"
+                            });
+                        }
+                    })
+                }else{
+                    Swal.fire({
+                        title: "Peringatan",
+                        text: "Menyimpan Konfigurasi Gagal",
+                        icon: "warning"
+                    });
+                }
+            })
+        }
 
         function addStudentEvent(){
             $('#btn-add-student').on('click',()=>{
@@ -137,5 +192,6 @@
         
         addStudentEvent();
         onlyNumberKey();
+        saveConfiguration();
     </script>
 @endsection

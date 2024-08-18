@@ -51,25 +51,7 @@
                 </div>
                 <div class="w-2/6">
                     <div class="flex flex-col border-b border-gray-300 pb-2">
-                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2"><i class="fa-solid fa-tools"></i> Konfigurasi Kelas {{$class->no_class}}</span>    
-                        <div class="grid grid-cols-1 gap-4 p-4">
-                            <div class="flex flex-col gap-2 text-sm">
-                                <span class="w-2/6 font-bold">Pengurangan Point</span>
-                                <input id="remove_point_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->remove_point}}">
-                            </div>
-                            <div class="flex flex-col gap-2 text-sm">
-                                <span class="w-2/6 font-bold">Slot Jawaban Murid</span>
-                                <input id="slot_answer_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->slot_answer}}">
-                            </div>
-                            <div class="flex flex-col gap-2 text-sm">
-                                <button id="btn-save-config" class="w-full bg-green-600 rounded-md hover:bg-green-700 p-4">
-                                    <span class="mx-auto m-auto btn font-bold text-white "><i class="fa fa-save mr-2" aria-hidden="true"></i> Simpan Konfigurasi</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col border-b border-gray-300 pb-2">
-                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2 pt-2"><i class="fa-solid fa-users-between-lines"></i> Pelajar Kelas {{$class->no_class}}</span>    
+                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2"><i class="fa-solid fa-users-between-lines"></i> Pelajar Kelas {{$class->no_class}}</span>    
                         <div class="grid grid-cols-1 gap-4 p-4">
                             <div class="flex gap-4 text-sm">
                                 <span class="w-2/6 font-bold">NISN</span>
@@ -93,6 +75,24 @@
                                 <input id="input-name-student" class="w-2/6 border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Nama">
                                 <button id="btn-add-student" class="w-2/6 bg-green-600 rounded-md hover:bg-green-700">
                                     <span class="mx-auto m-auto text-[20px] font-bold text-white "><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col border-b border-gray-300 pb-2 hidden">
+                        <span class="text-lg text-gray-800 font-bold border-b border-gray-300 pb-2"><i class="fa-solid fa-tools"></i> Konfigurasi Kelas {{$class->no_class}}</span>    
+                        <div class="grid grid-cols-1 gap-4 p-4">
+                            <div class="flex flex-col gap-2 text-sm">
+                                <span class="w-2/6 font-bold">Pengurangan Point</span>
+                                <input id="remove_point_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->remove_point}}">
+                            </div>
+                            <div class="flex flex-col gap-2 text-sm">
+                                <span class="w-2/6 font-bold">Slot Jawaban Murid</span>
+                                <input id="slot_answer_config" type="number" min="0" class="w-full border border-gray-400 p-2 text-sm rounded-md" placeholder="Masukan Pengurang Point" value="{{$class->slot_answer}}">
+                            </div>
+                            <div class="flex flex-col gap-2 text-sm">
+                                <button id="btn-save-config" class="w-full bg-green-600 rounded-md hover:bg-green-700 p-4">
+                                    <span class="mx-auto m-auto btn font-bold text-white "><i class="fa fa-save mr-2" aria-hidden="true"></i> Simpan Konfigurasi</span>
                                 </button>
                             </div>
                         </div>

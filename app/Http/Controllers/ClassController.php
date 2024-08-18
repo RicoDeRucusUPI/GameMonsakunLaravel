@@ -71,6 +71,7 @@ class ClassController extends Controller
             ->groupBy('id_student', "name_student")
             ->orderBy('total_point', "DESC")
             ->get();
+
         $data = [
             "question" => $questionWithAnswers,
             'total_point' => $totalPoint,
@@ -100,9 +101,12 @@ class ClassController extends Controller
         $decodeJsonAnswersStudent = json_decode($answerStudent->json_answers ?? null);
         $decodeJsonAnswers->answer_options = $decodeJsonAnswers->answer_options;
         shuffle($decodeJsonAnswers->answer_options);
+        $class = $this->classModel->where('id_class', $id_class)->get()->first();
+
         $data = [
             'no_question' =>  $no_question,
             'id_student' => session('id_student'),
+            'slot_answer' => $class->slot_answer,
             'question' => [
                 'id_question' => $question['id_question'],
                 'id_class' => $id_class,

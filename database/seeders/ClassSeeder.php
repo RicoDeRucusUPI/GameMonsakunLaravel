@@ -23,7 +23,7 @@ class ClassSeeder extends Seeder
             'no_class' => "2",
             'color_class' => "#6695ed",
             'remove_point' => 15,
-            'slot_answer' => 4
+            'slot_answer' => 3
         ]);
         DB::table('class')->insert([
             'no_class' => "3",
@@ -35,7 +35,7 @@ class ClassSeeder extends Seeder
             'no_class' => "4",
             'color_class' => '#dbed66',
             'remove_point' => 25,
-            'slot_answer' => 5
+            'slot_answer' => 4
         ]);
         DB::table('class')->insert([
             'no_class' => "5",

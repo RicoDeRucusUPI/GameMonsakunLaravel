@@ -23,10 +23,15 @@
                         <li class="draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base" style="width:auto" >{{$item}}</li>
                         @endforeach    
                     @else
-                    <div class="min-h-[120px] lg:min-h-[130px] h-auto border relative gap-4 grid grid-cols-1">
+                    <div class="min-h-[fit-content] lg:min-h-[130px] h-auto relative gap-4 grid grid-cols-1 relative">
                         <ul id="drop-answers"  class="w-full h-full flex flex-col gap-2 z-[100]">
                         </ul>
-                        
+                        <ul id="drop-shadows"  class="w-full h-full flex flex-col gap-2 z-[100] absolute opacity-[80%]">
+                            <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white text-right" style="width:100% !important; height:auto !important ">Slot 1</li>
+                            <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white text-right" style="width:100% !important; height:auto !important ">Slot 2</li>
+                            <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white text-right" style="width:100% !important; height:auto !important ">Slot 3</li>
+
+                        </ul>                        
                     </div>
                     @endif
                 </ul>
@@ -48,7 +53,7 @@
             <span class="text-[20px] text-center font-bold text-blue-400 mx-auto">Jawaban Acak</span>
             <ul class="flex flex-col gap-4 py-6  mb-auto relative border border-2 h-full p-4" id="sortable-answers-random">
                 @foreach ($question['json_answers'] as $item)
-                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}">{{$item->value}}. {{$item->answer}}</li>
+                <li class="h-[40px] draggable-answer border border-gray-400 p-2 text-black text-xs lg:text-base cursor-pointer hover:bg-blue-400 hover:text-white" style="width:100% !important; height:auto !important " rel="{{$item->value}}">{{$item->answer}}</li>
                 @endforeach
             </ul>
             <div class="text-sm lg:text-base bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" id="alert-wrong-answer" role="alert">
@@ -65,11 +70,18 @@
     </section>
     <a href="{{url("/class/{$question['id_class']}/questions")}}" class="fixed bottom-0 p-4 bg-blue-400 w-[20%] md:w-[8%] text-center text-white"><i class="fa-solid fa-arrow-left"></i></a>
     <script>
+
+        const slot_answer = {{$slot_answer}};
+        let slot_append = 0;
+        
         function moveAnswer(){
             $('#sortable-answers-random li').each((i, e)=>{
                 $(e).on('click',(i)=>{
-                    const target = i.target;
-                    $('#drop-answers').append(target);
+                    if(slot_append < slot_answer){
+                        const target = i.target;
+                        $('#drop-answers').append(target);
+                        slot_append++;
+                    }
                 })
             })
         }
@@ -122,6 +134,7 @@
         $('#btn-reset-answers').on('click',()=>{
             $('#drop-answers li').each((i, e)=>{
                 $('#sortable-answers-random').append(e);
+                slot_append = 0;
             })
         })
         moveAnswer();
